@@ -277,7 +277,7 @@
             <div class="text-center space-y-3">
                 <span class="text-xs uppercase tracking-[0.3em] text-morandiGreenDark">RSVP</span>
                 <h2 class="text-3xl md:text-4xl font-serif italic text-morandiText">出席回函</h2>
-                <p class="text-[1.1rem] tracking-widest text-morandiText/80 leading-relaxed">
+                <p class="text-[1.21rem] tracking-widest text-morandiText/80 leading-relaxed">
                     請於<strong class="font-bold">2026/10/15</strong>前回覆，非常感謝 ~<br>
                     <span class="italic text-xs font-serif">Awaiting Your Reply Before <strong class="font-bold">October 15, 2026</strong>. Thank you so much~</span>
                 </p>
@@ -300,11 +300,17 @@
                         <label class="block text-xs uppercase tracking-widest text-morandiGreenDark font-semibold">
                             是否出席 WILL YOU ATTEND <span class="text-morandiPink">*</span>
                         </label>
-                        <select id="attendance-select" required class="w-full px-4 py-3 rounded-xl border border-morandiGreen/30 focus:outline-none focus:border-morandiGreen transition-colors text-morandiText bg-morandiCard">
+                        <select id="attendance-select" required onchange="handleAttendanceChange()" class="w-full px-4 py-3 rounded-xl border border-morandiGreen/30 focus:outline-none focus:border-morandiGreen transition-colors text-morandiText bg-morandiCard">
                             <option value="" disabled selected>請選擇 Please select</option>
                             <option value="願意參與 Joyfully attend">願意參與 Joyfully attend</option>
                             <option value="不克出席 Regretfully decline">不克出席 Regretfully decline</option>
                         </select>
+                    </div>
+
+                    <!-- Decline Notice Message Box -->
+                    <div id="decline-notice" class="hidden bg-morandiPink/15 border border-morandiPink/40 text-morandiText rounded-xl p-4 text-sm font-serif flex items-center space-x-3">
+                        <i class="fa-solid fa-circle-info text-morandiPinkDark flex-shrink-0"></i>
+                        <span>抱歉您不能出席，可直接提交回函。</span>
                     </div>
 
                     <!-- Phone Number / Contact -->
@@ -440,6 +446,27 @@
                 childSection.classList.add('hidden');
                 document.getElementById('children-input').value = '';
                 document.getElementById('chairs-input').value = '';
+            }
+        }
+
+        // Attendance Change Logic (Handle "不克出席" selection)
+        function handleAttendanceChange() {
+            const attendanceSelect = document.getElementById('attendance-select');
+            const adultsInput = document.getElementById('adults-input');
+            const declineNotice = document.getElementById('decline-notice');
+
+            if (attendanceSelect.value === '不克出席 Regretfully decline') {
+                adultsInput.value = '0';
+                adultsInput.readOnly = true;
+                adultsInput.classList.add('bg-morandiGreen/10', 'cursor-not-allowed');
+                declineNotice.classList.remove('hidden');
+                toggleChildFields();
+            } else {
+                adultsInput.readOnly = false;
+                adultsInput.classList.remove('bg-morandiGreen/10', 'cursor-not-allowed');
+                declineNotice.classList.add('hidden');
+                adultsInput.value = '';
+                toggleChildFields();
             }
         }
 
